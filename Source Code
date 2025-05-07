@@ -1,0 +1,108 @@
+import matplotlib.pyplot as plt
+
+# Data for feature importance
+features = ['OverallQual', 'GrLivArea', 'GarageCars', 'TotalBsmtSF', 'Neighborhood']
+importance = [30, 20, 15, 10, 25]
+
+# Pie chart
+plt.figure(figsize=(6, 6))
+plt.pie(importance, labels=features, autopct='%1.1f%%', startangle=140)
+plt.title('Top Features Influencing House Prices')
+plt.axis('equal')
+plt.tight_layout()
+plt.show()
+import seaborn as sns
+import pandas as pd
+
+# Model errors data
+data = {
+    'Model': ['Linear', 'Lasso', 'Ridge', 'Decision Tree', 'Random Forest', 'Gradient Boosting'],
+    'MAE': [23500, 22900, 22800, 21000, 18500, 17000],
+    'RMSE': [363.4, 360.3, 358.5, 339.1, 313.0, 301.6]
+}
+df_errors = pd.DataFrame(data)
+
+# Plot
+plt.figure(figsize=(10, 6))
+sns.barplot(x='Model', y='MAE', data=df_errors, color='skyblue', label='MAE')
+sns.barplot(x='Model', y='RMSE', data=df_errors, color='navy', alpha=0.7, label='RMSE')
+plt.title('Model Error Comparison (MAE vs RMSE)')
+plt.ylabel('Error Value')
+plt.legend()
+plt.xticks(rotation=15)
+plt.tight_layout()
+plt.show()
+# Full metrics data
+full_metrics = {
+    'Model': ['Linear Regression', 'Lasso Regression', 'Ridge Regression', 
+              'Decision Tree', 'Random Forest', 'Gradient Boosting'],
+    'MAE': [23500, 22900, 22800, 21000, 18500, 17000],
+    'MSE': [132000, 129800, 128500, 115000, 98000, 91000],
+    'RMSE': [363.4, 360.3, 358.5, 339.1, 313.0, 301.6],
+    'R2': [0.68, 0.70, 0.71, 0.76, 0.82, 0.85]
+}
+df_metrics = pd.DataFrame(full_metrics)
+
+# Plot R2 score
+plt.figure(figsize=(10, 6))
+sns.barplot(x='Model', y='R2', data=df_metrics, palette='viridis')
+plt.title('Model Comparison by R² Score')
+plt.ylabel('R² Value')
+plt.xticks(rotation=15)
+plt.ylim(0.6, 0.9)
+plt.tight_layout()
+plt.show()
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Define the models and their performance metrics
+models = ['Linear', 'Lasso', 'Ridge', 'Decision Tree', 'Random Forest', 'Gradient Boosting']
+r2_scores = [0.68, 0.70, 0.71, 0.76, 0.82, 0.85]
+mae_scores = [23500, 22900, 22800, 21000, 18500, 17000]
+rmse_scores = [363.4, 360.3, 358.5, 339.1, 313.0, 301.6]
+
+# Number of variables (metrics)
+categories = ['R²', 'MAE', 'RMSE']
+
+# Normalize the data (since MAE and RMSE are in different units compared to R²)
+# We need to normalize MAE and RMSE, since R² is a percentage, and the others are in different scales
+mae_normalized = [x / max(mae_scores) for x in mae_scores]
+rmse_normalized = [x / max(rmse_scores) for x in rmse_scores]
+r2_normalized = [x for x in r2_scores]
+
+# Create a Radar chart
+labels = categories
+num_vars = len(labels)
+
+# Create a list of angles for the radar chart (one per variable)
+angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
+
+# Complete the loop of the chart
+angles += angles[:1]
+
+# Create the plot
+fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+
+# Add each model's performance as a line on the chart
+for i, model in enumerate(models):
+    values = [r2_normalized[i], mae_normalized[i], rmse_normalized[i]]
+    values += values[:1]  # To close the radar chart loop
+    ax.plot(angles, values, linewidth=2, linestyle='solid', label=model)
+
+# Fill in the areas for each model
+for i, model in enumerate(models):
+    values = [r2_normalized[i], mae_normalized[i], rmse_normalized[i]]
+    values += values[:1]  # To close the radar chart loop
+    ax.fill(angles, values, alpha=0.25)
+
+# Add labels and title
+ax.set_yticklabels([])  # Remove radial axis labels
+ax.set_xticks(angles[:-1])
+ax.set_xticklabels(labels)
+ax.set_title('Model Performance Comparison (Radar Chart)', size=16)
+
+# Add legend
+ax.legend(loc='upper right', bbox_to_anchor=(1.2, 1))
+
+# Show the chart
+plt.show()
